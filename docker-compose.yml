@@ -1,12 +1,12 @@
 services:
-  backend_redis:
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
-    ports:
-      - "6379:6379"
-    env_file:
-      - .env
-    volumes:
-      - .:/app
+  # backend_redis:
+  #   image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
+  #   ports:
+  #     - "6379:6379"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/app
 
   backend_rds:
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
