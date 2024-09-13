@@ -59,7 +59,8 @@ jobs:
             git pull origin master
 
             # Log in to ECR on the EC2 instance
-            aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
+            aws ecr-public get-login-password --region us-east-2 | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
+
 
             # Pull the latest Docker image from ECR
             dcoker pull public.ecr.aws/b7r1g3n1/rds:56e8b3c6a6dba31037cf1ad33ae583d15464b313
