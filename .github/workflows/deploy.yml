@@ -64,7 +64,6 @@ jobs:
             cd /home/ec2-user/Docker/project1 # Перехід у каталог проекту
 
             # Pull the latest changes from the repository
-            rm -rf docker-compose.yml
             git pull origin master
 
             # Log in to ECR on the EC2 instance
