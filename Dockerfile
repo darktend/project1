@@ -22,4 +22,4 @@ COPY . /app/
 EXPOSE 80
 
 # Run the Django app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
+CMD ["python", "manage.py",]
