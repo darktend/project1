@@ -32,19 +32,16 @@ jobs:
       - name: Log in to Amazon ECR
         run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
-   - name: Build and push Docker image
+      - name: Build and push Docker image
         run: |
           IMAGE_TAG=${{ github.sha }}
-
-          # Log in to the Amazon ECR registry
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-
+          
           # Build the Docker image
           docker build -t rds:$IMAGE_TAG .
-
+          
           # Tag the image for the ECR repository
           docker tag rds:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
-
+          
           # Push the image to the ECR repository
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
 
