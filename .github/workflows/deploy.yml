@@ -62,10 +62,10 @@ jobs:
             aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
 
             # Pull the latest Docker image from ECR
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/docker:$IMAGE_TAG
+            docker pull public.ecr.aws/b7r1g3n1/rds:latest
 
             # Update the Docker Compose file with the new image tag only for the web service
-            sed -i '/web:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG|g' docker-compose.yml
+            #sed -i '/web:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG|g' docker-compose.yml
 
             # Stop the Docker Compose stack
             docker-compose down
