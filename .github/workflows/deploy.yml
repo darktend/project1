@@ -51,9 +51,9 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
-          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             echo "Logged into EC2 instance"
-            cd /home/ec2-user/Docker/ # Перехід у каталог проекту
+            cd /home/ec2-user/Docker/ # Navigate to the project directory
 
             # Pull the latest changes from the repository
             git pull origin master
@@ -61,9 +61,8 @@ jobs:
             # Log in to ECR on the EC2 instance
             aws ecr-public get-login-password --region us-east-2 | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
 
-
-            # Pull the latest Docker image from ECR
-            dcoker pull public.ecr.aws/b7r1g3n1/rds:56e8b3c6a6dba31037cf1ad33ae583d15464b313
+            # Pull the latest Docker image from ECR (fixed typo 'dcoker')
+            docker pull public.ecr.aws/b7r1g3n1/rds:${IMAGE_TAG}
 
             # Stop the Docker Compose stack
             docker-compose down
