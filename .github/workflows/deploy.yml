@@ -64,6 +64,7 @@ jobs:
               exit 1
             fi
 
+              git clone git@github.com:darktend/project1.git
             # Pull the latest changes from the repository
             git pull origin master
 
