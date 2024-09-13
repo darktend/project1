@@ -70,13 +70,13 @@ jobs:
             aws ecr-public get-login-password --region us-east-2 | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
 
             # Pull the latest Docker image from ECR
-            docker pull public.ecr.aws/b7r1g3n1/rds:${IMAGE_TAG}
+            sudo docker pull public.ecr.aws/b7r1g3n1/rds:${IMAGE_TAG}
 
             # Stop the Docker Compose stack
-            docker-compose down
+            sudo docker-compose down
 
             # Start the Docker Compose stack
-            docker-compose up -d
+            sudo docker-compose up -d
           EOF
 
           # Clean up the SSH key
