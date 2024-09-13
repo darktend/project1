@@ -59,10 +59,10 @@ jobs:
             git pull origin master
 
             # Log in to ECR on the EC2 instance
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+            aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 192144932264.dkr.ecr.us-east-2.amazonaws.com
 
             # Pull the latest Docker image from ECR
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR }}:$IMAGE_TAG 
+            docker pull 192144932264.dkr.ecr.us-east-2.amazonaws.com/rds:$IMAGE_TAG
 
             # Update the Docker Compose file with the new image tag only for the web service
             sed -i '/web:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR }}:$IMAGE_TAG|g' docker-compose.yml
