@@ -37,13 +37,13 @@ jobs:
           IMAGE_TAG=${{ github.sha }}
           
           # Build the Docker image
-          docker build -t rds:$IMAGE_TAG .
+          docker build -t rds:${IMAGE_TAG} .
           
           # Tag the image for the ECR repository
-          docker tag rds:$IMAGE_TAG public.ecr.aws/b7r1g3n1/rds:$IMAGE_TAG
+          docker tag rds:${IMAGE_TAG} public.ecr.aws/b7r1g3n1/rds:${IMAGE_TAG}
           
           # Push the image to the ECR repository
-          docker push public.ecr.aws/b7r1g3n1/rds:$IMAGE_TAG
+          docker push public.ecr.aws/b7r1g3n1/rds:${IMAGE_TAG}
 
       - name: Deploy to EC2 and run with Docker Compose
         env:
@@ -51,9 +51,17 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
-          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+
+          # Use SSH non-interactively by using -T
+          ssh -T -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             echo "Logged into EC2 instance"
             cd /home/ec2-user/Docker/ # Navigate to the project directory
+
+            # Check if the docker-compose.yml file exists
+            if [ ! -f docker-compose.yml ]; then
+              echo "Error: docker-compose.yml not found!"
+              exit 1
+            fi
 
             # Pull the latest changes from the repository
             git pull origin master
@@ -61,7 +69,7 @@ jobs:
             # Log in to ECR on the EC2 instance
             aws ecr-public get-login-password --region us-east-2 | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
 
-            # Pull the latest Docker image from ECR (fixed typo 'dcoker')
+            # Pull the latest Docker image from ECR
             docker pull public.ecr.aws/b7r1g3n1/rds:${IMAGE_TAG}
 
             # Stop the Docker Compose stack
