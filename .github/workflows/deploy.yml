@@ -76,7 +76,7 @@ jobs:
             sudo docker pull public.ecr.aws/b7r1g3n1/rds:${IMAGE_TAG}
 
             # Stop the Docker Compose stack
-            sudo docker-compose down
+             docker-compose down
 
             # Start the Docker Compose stack
             sudo docker-compose up -d
