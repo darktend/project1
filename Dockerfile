@@ -20,8 +20,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy the rest of the application code into the container
 COPY . /app/
 
-# Expose port 80
-EXPOSE 80
+# Expose port 8000
+EXPOSE 8000
 
 # Run the Django app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
