@@ -79,7 +79,7 @@ jobs:
              docker-compose down
 
             # Start the Docker Compose stack
-            sudo docker-compose up -d
+            docker-compose up -d
           EOF
 
           # Clean up the SSH key
