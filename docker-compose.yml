@@ -1,6 +1,6 @@
 services:
   web:
-    image: "public.ecr.aws/b7r1g3n1/rds:${IMAGE_TAG}"
+    image: "public.ecr.aws/b7r1g3n1/rds:076394671eb62cfd8ddad10be11869429e081084"
     ports:
       - "80:80"
     env_file:
