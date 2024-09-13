@@ -72,12 +72,12 @@ jobs:
             # Pull the latest Docker image from ECR
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG
+            #docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG
 
             # Update the Docker Compose file with the new image tag only for the web service
             sed -i '/web:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR }}:$IMAGE_TAG|g' docker-compose.yml
             sed -i '/web:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG|g' docker-compose.yml
-            sed -i '/web:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG|g' docker-compose.yml
+            #sed -i '/web:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG|g' docker-compose.yml
 
             # Stop the Docker Compose stack
             docker-compose down
