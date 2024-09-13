@@ -30,7 +30,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Log in to Amazon ECR
-        run: aws ecr-public get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
+        run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
 
       - name: Build and push Docker image
         run: |
@@ -59,7 +59,7 @@ jobs:
             git pull origin master
 
             # Log in to ECR on the EC2 instance
-            aws ecr-public get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
+            aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/b7r1g3n1
 
             # Pull the latest Docker image from ECR
             docker pull public.ecr.aws/b7r1g3n1/rds:$IMAGE_TAG
