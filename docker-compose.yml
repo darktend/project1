@@ -1,6 +1,7 @@
 services:
   web:
     context: ./frontend
+    dockerfile: Dockerfile
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/web:${IMAGE_TAG}"
     ports:
       - "80:80"
@@ -20,6 +21,7 @@ services:
 
   backend_redis:
     context: ./backend_redis
+    dockerfile: Dockerfile
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
     ports:
       - "6379:6379"
@@ -39,6 +41,7 @@ services:
 
   backend_rds:
     context: ./backend_rds
+    dockerfile: Dockerfile
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
       - "5432:5432"
