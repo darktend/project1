@@ -1,6 +1,6 @@
 services:
   web:
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/docker:${IMAGE_TAG}"
     ports:
       - "80:80"
     env_file:
