@@ -49,7 +49,7 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > .ssh/devs
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /.ssh/devs
           chmod 600 .ssh/devs
           ssh -o StrictHostKeyChecking=no -i /.ssh/devs ec2-user@${{ secrets.EC2_HOST }} << EOF
             echo "Logged into EC2 instance"
