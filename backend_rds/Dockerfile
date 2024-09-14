@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy the requirements file into the container
-COPY requirements.txt /app/
+COPY ./requirements.txt /app/
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
@@ -24,4 +24,4 @@ COPY . /app/
 EXPOSE 8000
 
 # Run the Django app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:7000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:5432"]
