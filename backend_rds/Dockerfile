@@ -21,7 +21,7 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r /app/requirements
 COPY . /app/
 
 # Expose port 80 (or whatever port you need)
-EXPOSE 5432
+EXPOSE 5433
 
 # Run the Flask app
-CMD ["python", "manage.py"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:5433"]
