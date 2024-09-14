@@ -3,7 +3,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: dev
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/web:${IMAGE_TAG}"
     ports:
       - "80:80"
@@ -25,7 +24,6 @@ services:
     build:
       context: ./backend_redis
       dockerfile: Dockerfile
-      target: dev
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
     ports:
       - "6379:6379"
@@ -47,7 +45,6 @@ services:
     build:
       context: ./backend_rds
       dockerfile: Dockerfile
-      target: dev
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
       - "5432:5432"
