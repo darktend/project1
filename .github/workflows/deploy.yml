@@ -37,9 +37,9 @@ jobs:
           IMAGE_TAG=${{ github.sha }}
           
           # Build the Docker image
-          docker build -t ${{ secrets.AWS_ECR }}:$IMAGE_TAG .
-          docker build -t web:$IMAGE_TAG .
-          docker build -t redis:$IMAGE_TAG .
+          docker build -t ${{ secrets.AWS_ECR }}:$IMAGE_TAG ./frontend
+          docker build -t web:$IMAGE_TAG ./frontend
+          docker build -t redis:$IMAGE_TAG ./backend_redis
           
           # Tag the image for the ECR repository
           docker tag rds:$IMAGE_TAG 192144932264.dkr.ecr.us-east-2.amazonaws.com/rds:$IMAGE_TAG
