@@ -28,15 +28,3 @@ EXPOSE 8000
 
 # Run the Django app in development mode
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-# Production stage
-FROM base as prod
-
-# Copy the rest of the application code into the container
-COPY . /app/
-
-# Expose port 8000 (Django's default port)
-EXPOSE 8000
-
-# Run the Django app in production mode
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "myapp.wsgi:application"]
