@@ -20,8 +20,8 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r /app/requirements
 # Copy the rest of the application code into the container
 COPY . /app/
 
-# Expose port 80 (or whatever port you need)
-EXPOSE 5433
+# Expose port (ensure this is correct, typically Django uses 8000)
+EXPOSE 8000
 
-# Run the Flask app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:5433"]
+# Run the Django app (adjust the port if needed)
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
