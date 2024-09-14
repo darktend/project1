@@ -1,7 +1,7 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
-# Install system dependencies
+# Install system dependencies (include dependencies for psycopg2)
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
@@ -14,7 +14,7 @@ WORKDIR /app
 # Copy the requirements file into the container
 COPY requirements.txt /app/
 
-# Install Python dependencies
+# Install Python dependencies (including psycopg2)
 RUN pip install --upgrade pip && pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy the rest of the application code into the container
