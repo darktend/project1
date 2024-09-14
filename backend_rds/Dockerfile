@@ -15,13 +15,13 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 # Install Python dependencies
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 
 # Copy the rest of the application code into the container
 COPY . /app/
 
-# Expose port 8000
-EXPOSE 5432
+# Expose port 8000 for Django
+EXPOSE 8000
 
-# Run the Django app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:5432"]
+# Run the Django app on port 8000
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
