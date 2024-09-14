@@ -21,4 +21,4 @@ COPY . /app/
 EXPOSE 6379
 
 # Run the Flask app
-CMD ["python", "/app/backend_redis/core/views.py"]
+CMD ["python", "manage.py"]
