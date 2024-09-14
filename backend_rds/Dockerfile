@@ -1,27 +1,30 @@
-# Use an official Python runtime as a parent image
+# Використовуємо офіційний образ Python як базовий
 FROM python:3.9-slim
 
-# Install system dependencies (include dependencies for psycopg2)
+# Встановлюємо системні залежності (для роботи з PostgreSQL)
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Встановлюємо pip та psycopg2-binary окремо, якщо це необхідно
+RUN pip install --upgrade pip && pip install psycopg2-binary==2.9.6
+
+# Встановлюємо робочу директорію
 WORKDIR /app
 
-# Copy the requirements file into the container
+# Копіюємо файл requirements.txt у контейнер
 COPY requirements.txt /app/
 
-# Install Python dependencies (including psycopg2)
-RUN pip install --upgrade pip && pip install --no-cache-dir -r /app/requirements.txt
+# Встановлюємо залежності з requirements.txt (повторне встановлення psycopg2-binary, якщо вже вказаний у файлі)
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy the rest of the application code into the container
+# Копіюємо решту коду додатка у контейнер
 COPY ./backend_rds /app/
 
-# Expose port (ensure this is correct, typically Django uses 8000)
+# Відкриваємо порт (типово для Django - 8000)
 EXPOSE 8000
 
-# Run the Django app (adjust the port if needed)
+# Запускаємо Django додаток
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
