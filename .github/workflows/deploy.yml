@@ -42,14 +42,14 @@ jobs:
           docker build -t redis:$IMAGE_TAG ./backend_redis
           
           # Tag the images for the ECR repository
-          docker tag rds:$IMAGE_TAG ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
-          docker tag web:$IMAGE_TAG ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG
-          docker tag redis:$IMAGE_TAG ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
+          docker tag rds:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
+          docker tag web:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG
+          docker tag redis:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
           
           # Push the images to the ECR repository
-          docker push ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
-          docker push ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG
-          docker push ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
 
       - name: Deploy to EC2 and run with Docker Compose
         env:
@@ -67,17 +67,17 @@ jobs:
             git pull origin master
 
             # Log in to ECR on the EC2 instance
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
             # Pull the latest Docker images from ECR
-            docker pull ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
-            docker pull ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG
-            docker pull ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
 
             # Update the Docker Compose file with the new image tags
-            sed -i 's|image: .*rds:.*|image: ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG|g' docker-compose.yml
-            sed -i 's|image: .*web:.*|image: ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG|g' docker-compose.yml
-            sed -i 's|image: .*redis:.*|image: ${ secrets.AWS_ACCOUNT_ID }.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG|g' docker-compose.yml
+            sed -i 's|image: .*rds:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG|g' docker-compose.yml
+            sed -i 's|image: .*web:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/web:$IMAGE_TAG|g' docker-compose.yml
+            sed -i 's|image: .*redis:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG|g' docker-compose.yml
 
             # Stop and start the Docker Compose stack
             docker-compose down
