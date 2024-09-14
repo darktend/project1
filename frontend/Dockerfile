@@ -20,7 +20,7 @@ COPY . .
 FROM nginx:alpine
 
 # Копіювання побудованих файлів у Nginx
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app /usr/share/nginx/html
 
 # Відкриття порту
 EXPOSE 80
