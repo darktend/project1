@@ -37,7 +37,7 @@ jobs:
           IMAGE_TAG=${{ github.sha }}
           
           # Build the Docker image
-          docker build -t ${{ secrets.AWS_ECR }}:$IMAGE_TAG ./frontend
+          docker build -t ${{ secrets.AWS_ECR }}:$IMAGE_TAG ./backend_rds
           docker build -t web:$IMAGE_TAG ./frontend
           docker build -t redis:$IMAGE_TAG ./backend_redis
           
