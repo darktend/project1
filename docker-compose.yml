@@ -43,26 +43,26 @@ services:
   #       delay: 10s
   #       order: start-first
 
-  backend_rds:
-    build:
-      context: ./backend_rds
-      dockerfile: Dockerfile
-      target: dev
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
-    ports:
-      - "5432:5432"
-    env_file:
-      - .env
-    volumes:
-      - ./backend_rds:/app
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-        order: start-first
+#   backend_rds:
+#     build:
+#       context: ./backend_rds
+#       dockerfile: Dockerfile
+#       target: dev
+#     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
+#     ports:
+#       - "5432:5432"
+#     env_file:
+#       - .env
+#     volumes:
+#       - ./backend_rds:/app
+#     deploy:
+#       replicas: 1
+#       restart_policy:
+#         condition: on-failure
+#       update_config:
+#         parallelism: 1
+#         delay: 10s
+#         order: start-first
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
