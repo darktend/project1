@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Встановлюємо psycopg2-binary окремо
-RUN pip install --upgrade pip && pip install 
+# Оновлюємо pip та встановлюємо psycopg2-binary
+RUN pip install --upgrade pip && pip install psycopg2-binary
 
 # Встановлюємо робочу директорію
 WORKDIR /app
