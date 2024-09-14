@@ -1,4 +1,4 @@
-# Base stage
+# Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
 # Install system dependencies
@@ -23,5 +23,5 @@ COPY . /app/
 # Expose port 8000 (Django's default port)
 EXPOSE 8000
 
-# Run the Django app in development mode
+# Run the Django app (on port 8000)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
