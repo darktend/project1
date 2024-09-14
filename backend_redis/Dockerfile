@@ -17,9 +17,6 @@ COPY requirements.txt /app/
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 
-# Development stage
-FROM base as dev
-
 # Copy the rest of the application code into the container
 COPY . /app/
 
