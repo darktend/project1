@@ -22,26 +22,26 @@ services:
         delay: 10s
         order: start-first
 
-  backend_redis:
-    build:
-      context: ./backend_redis
-      dockerfile: Dockerfile
-      target: dev
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
-    ports:
-      - "6379:6379"
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-        order: start-first
+  # backend_redis:
+  #   build:
+  #     context: ./backend_redis
+  #     dockerfile: Dockerfile
+  #     target: dev
+  #   image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
+  #   ports:
+  #     - "6379:6379"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/app
+  #   deploy:
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: on-failure
+  #     update_config:
+  #       parallelism: 1
+  #       delay: 10s
+  #       order: start-first
 
   backend_rds:
     build:
