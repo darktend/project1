@@ -1,24 +1,30 @@
-# Use an official Python runtime as a parent image
+# Використовуємо офіційний Python образ як базовий
 FROM python:3.9-slim
 
-# Set environment variables
-#ENV PYTHONDONTWRITEBYTECODE 1
-#ENV PYTHONUNBUFFERED 1
+# Встановлюємо системні залежності
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Встановлюємо psycopg2-binary окремо
+RUN pip install --upgrade pip && pip install psycopg2-binary==2.9.6
+
+# Встановлюємо робочу директорію
 WORKDIR /app
 
-# Copy the requirements file into the container
+# Копіюємо файл requirements.txt у контейнер
 COPY requirements.txt /app/
 
-# Install the dependencies
-RUN pip install --upgrade pip && pip install -r /app/requirements.txt
+# Встановлюємо залежності з requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy the rest of the application code into the container
-COPY . /app/
+# Копіюємо решту коду додатка у контейнер
+COPY ./backend_rds /app/
 
-# Expose port 80
-EXPOSE 6379
+# Відкриваємо порт (типово для Django - 8000)
+EXPOSE 8000
 
-# Run the Flask app
-CMD ["python", "manage.py"]
+# Запускаємо Django додаток
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
