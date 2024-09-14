@@ -5,16 +5,16 @@ FROM node:16 AS build
 WORKDIR /app
 
 # Копіювання package.json та package-lock.json
-COPY package*.json ./
+# COPY package*.json ./
 
 # Встановлення залежностей
-RUN npm install
+# RUN npm install
 
 # Копіювання всіх файлів
 COPY . .
 
 # Побудова фронтенду
-RUN npm run build
+# RUN npm run build
 
 # Використання базового образу для сервера статичних файлів
 FROM nginx:alpine
