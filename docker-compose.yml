@@ -1,4 +1,4 @@
-version: '3.8'  # Додайте версію Compose, якщо вона ще не зазначена
+version: '3.8'  # Вказуємо версію Compose
 
 services:
   web:
@@ -48,7 +48,7 @@ services:
       context: ./backend_rds
       dockerfile: Dockerfile
       target: dev
-    command: python manage.py runserver 0.0.0.0:8000
+    command: "python manage.py runserver 0.0.0.0:8000"  # Зверніть увагу на правильний формат
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
       - "5432:5432"
