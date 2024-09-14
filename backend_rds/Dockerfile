@@ -18,7 +18,7 @@ COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy the rest of the application code into the container
-COPY . /app/
+COPY ./backend_rds /app/
 
 # Expose port (ensure this is correct, typically Django uses 8000)
 EXPOSE 8000
