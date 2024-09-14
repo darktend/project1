@@ -12,13 +12,13 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app2
 
 # Copy the requirements file into the container
-COPY ./requirements.txt /app2/
+COPY requirements.txt /app/
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy the rest of the application code into the container
-COPY . /app2/
+COPY . /app/
 
 # Expose port 8000
 EXPOSE 6379
