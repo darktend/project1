@@ -88,3 +88,5 @@ jobs:
 
           # Clean up the SSH key
           rm /tmp/ssh_key
+
+          #pipeline для веб сервісу>s3
