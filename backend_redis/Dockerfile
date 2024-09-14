@@ -15,13 +15,13 @@ WORKDIR /app2
 COPY requirements.txt /app/
 
 # Install Python dependencies
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip --no-cache-dir && pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy the rest of the application code into the container
 COPY . /app/
 
-# Expose port 8000
-EXPOSE 6379
+# Expose port 8000 (this may need to be adjusted based on your service)
+EXPOSE 8000
 
 # Run the Django app
 CMD ["python", "manage.py", "runserver", "0.0.0.0:6379"]
