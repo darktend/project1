@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from django.middleware.security import SecurityMiddleware
 from django.middleware.common import CommonMiddleware
+import psycopg2 as Database
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
