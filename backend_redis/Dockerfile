@@ -9,19 +9,19 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /app2
 
 # Copy the requirements file into the container
-COPY requirements.txt /app/
+COPY ./requirements.txt /app2/
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy the rest of the application code into the container
-COPY . /app/
+COPY . /app2/
 
 # Expose port 8000
 EXPOSE 8000
 
 # Run the Django app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:5432"]
