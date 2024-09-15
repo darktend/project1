@@ -90,3 +90,5 @@ jobs:
           rm /tmp/ssh_key
 
           #pipeline для веб сервісу>s3
+          #розбити на jobs
+          #1.redis,rds:1 bild,2deploy

@@ -1,5 +1,0 @@
-{
-    "BACKEND_RDS_URL": "http://dev.c7a8gmo60k14.us-east-2.rds.amazonaws.com:5432",
-    "BACKEND_REDIS_URL": "http://dev-redis-cluster.lr3id4.0001.use2.cache.amazonaws.com:6379"
-  }
-  
