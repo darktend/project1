@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Оновлюємо pip та встановлюємо psycopg2-binary
-RUN pip install --upgrade pip && pip install psycopg2-binary
+# Встановлюємо psycopg2-binary окремо
+RUN pip install --upgrade pip && pip install 
 
 # Встановлюємо робочу директорію
 WORKDIR /app
@@ -23,8 +23,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Копіюємо решту коду додатка у контейнер
 COPY . /app/
 
-# Відкриваємо порт (типово для Django - 7000)
-EXPOSE 7000
+# Відкриваємо порт (типово для Django - 8000)
+EXPOSE 8000
 
 # Запускаємо Django додаток
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
