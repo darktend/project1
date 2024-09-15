@@ -1,16 +1,16 @@
 services:
-  backend_redis:
-    build:
-      context: ./backend_redis
-      dockerfile: Dockerfile
-      target: dev # Якщо потрібно
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
-    ports:
-      - "6379:6379"
-    env_file:
-      - .env
-    volumes:
-      - .:/app
+  # backend_redis:
+  #   build:
+  #     context: ./backend_redis
+  #     dockerfile: Dockerfile
+  #     target: dev # Якщо потрібно
+  #   image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
+  #   ports:
+  #     - "6379:6379"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/app
 
   backend_rds:
     build:
