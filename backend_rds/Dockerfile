@@ -23,8 +23,8 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Копіюємо решту коду додатка у контейнер
 COPY . /app/
 
-# Відкриваємо порт (типово для Django - 8000)
-EXPOSE 8000
+# Відкриваємо порт (типово для Django - 7000)
+EXPOSE 7000
 
 # Запускаємо Django додаток
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
