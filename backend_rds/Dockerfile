@@ -20,9 +20,6 @@ COPY requirements.txt /app/
 # Встановлюємо залежності з requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-#копіюємо env файл
-COPY .env /app/
-
 # Копіюємо решту коду додатка у контейнер
 COPY . /app/
 
