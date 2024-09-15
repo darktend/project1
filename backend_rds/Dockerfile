@@ -23,14 +23,11 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Копіюємо решту коду додатка у контейнер
 COPY . /app/
 
-# Збираємо статичні файли (якщо використовуються)
-RUN python manage.py collectstatic --noinput
-
 # Відкриваємо порт (8000 для Django)
 EXPOSE 8000
 
 # Встановлюємо gunicorn для продакшн
 RUN pip install gunicorn
 
-# Запускаємо gunicorn сервер
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
+# Запускаємо gunicorn та збираємо статичні файли при запуску контейнера
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 core.wsgi:application"]
