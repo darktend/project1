@@ -9,14 +9,8 @@ services:
       - "6379:6379"
     env_file:
       - .env
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-        order: start-first
+    volumes:
+      - .:/app
 
   backend_rds:
     build:
