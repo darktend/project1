@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Встановлюємо psycopg2-binary окремо
-RUN pip install --upgrade pip && pip install 
+RUN pip install --upgrade pip && pip install psycopg2-binary==2.9.6
 
 # Встановлюємо робочу директорію
 WORKDIR /app
@@ -21,7 +21,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Копіюємо решту коду додатка у контейнер
-COPY . /app/
+COPY ./backend_redis /app/
 
 # Відкриваємо порт (типово для Django - 8000)
 EXPOSE 8000

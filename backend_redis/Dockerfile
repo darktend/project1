@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Встановлюємо psycopg2-binary окремо
-RUN pip install --upgrade pip && pip install 
+RUN pip install --upgrade pip && pip install psycopg2-binary==2.9.6
 
 # Встановлюємо робочу директорію
 WORKDIR /app
