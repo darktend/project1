@@ -21,7 +21,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Копіюємо решту коду додатка у контейнер
-COPY ./backend_redis /app/
+COPY . /app/
 
 # Відкриваємо порт (типово для Django - 8000)
 EXPOSE 8000
