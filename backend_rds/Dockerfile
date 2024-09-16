@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY . /app/
 
 # Відкриваємо порт (типово для Django - 8000)
-EXPOSE 8000
+EXPOSE 5432
 
 # Запускаємо Django додаток
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:5432"]
