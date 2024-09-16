@@ -22,9 +22,6 @@ RUN pip install --upgrade pip \
 # Copy the rest of the application code into the container
 COPY . /app/
 
-# Copy the .env file to the container
-COPY .env /app/.env
-
 # Expose the port that Django will run on
 EXPOSE 8000
 
