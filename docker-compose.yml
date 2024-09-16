@@ -19,7 +19,7 @@ services:
       target: dev
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
-      - "8000:8000"  # Correct Django port
+      - "5432:5432"  # Correct Django port
     env_file:
       - .env
     volumes:
