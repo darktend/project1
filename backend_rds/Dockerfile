@@ -1,30 +1,31 @@
-# Використовуємо офіційний Python образ як базовий
+# Use the official Python image as the base image
 FROM python:3.9-slim
 
-# Встановлюємо системні залежності
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Встановлюємо psycopg2-binary окремо
+# Upgrade pip and install psycopg2-binary separately
 RUN pip install --upgrade pip && pip install psycopg2-binary==2.9.6
 
-# Встановлюємо робочу директорію
+# Set the working directory
 WORKDIR /app
 
-# Копіюємо файл requirements.txt у контейнер
+# Copy the requirements file and install dependencies
 COPY requirements.txt /app/
-
-# Встановлюємо залежності з requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Копіюємо решту коду додатка у контейнер
+# Copy the rest of the application code
 COPY . /app/
 
-# Відкриваємо порт (типово для Django - 8000)
-EXPOSE 5432
+# Check directory contents for debugging
+RUN ls -la /app
 
-# Запускаємо Django додаток
-CMD ["python", "manage.py", "runserver", "0.0.0.0:5432"]
+# Expose port 8000 for Django
+EXPOSE 8000
+
+# Run the Django application
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
