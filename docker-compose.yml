@@ -14,12 +14,12 @@ services:
 
   backend_rds:
     build:
-      context: ./backend_rds
+      context: .  # Build context set to current directory
       dockerfile: Dockerfile
-      target: dev #
+      target: dev
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
-      - "5432:5432" # Вказуємо правильний порт для Django
+      - "8000:8000"  # Correct Django port
     env_file:
       - .env
     volumes:
