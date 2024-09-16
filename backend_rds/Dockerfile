@@ -1,31 +1,32 @@
-# Use the official Python image as the base image
+# Use the official Python image
 FROM python:3.9-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    gcc \
-    libpq-dev \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Upgrade pip and install psycopg2-binary separately
-RUN pip install --upgrade pip && pip install psycopg2-binary==2.9.6
-
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# Install system dependencies for PostgreSQL and other utilities
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc libpq-dev python3-dev build-essential
 
-# Copy the rest of the application code
+# Copy the requirements file into the container
+COPY requirements.txt /app/
+
+# Install the required Python packages
+RUN pip install --upgrade pip \
+    && pip install -r requirements.txt
+
+# Copy the rest of the application code into the container
 COPY . /app/
 
-# Check directory contents for debugging
-RUN ls -la /app
+# Copy the .env file to the container
+COPY .env /app/.env
 
-# Expose port 8000 for Django
+# Expose the port that Django will run on
 EXPOSE 8000
 
-# Run the Django application
+# Run the application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
