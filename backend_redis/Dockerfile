@@ -26,4 +26,4 @@ COPY . /app/
 EXPOSE 7000
 
 # Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:6000"]
+CMD ["python", "manage.py", "redis-server"]
