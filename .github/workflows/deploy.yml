@@ -8,7 +8,10 @@ on:
 jobs:
   build_rds:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'backend_rds') || contains(github.event.head_commit.modified, 'backend_rds/')"
+    if: ${{ github.event_name == 'push' }}
+    paths:
+      - 'backend_rds/**'
+      - 'docker-compose.yml'
     
     steps:
       - name: Checkout code
@@ -61,7 +64,10 @@ jobs:
 
   build_redis:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'backend_redis') || contains(github.event.head_commit.modified, 'backend_redis/')"
+    if: ${{ github.event_name == 'push' }}
+    paths:
+      - 'backend_redis/**'
+      - 'docker-compose.yml'
     
     steps:
       - name: Checkout code
