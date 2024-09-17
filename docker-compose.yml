@@ -11,11 +11,9 @@ services:
   backend_rds:
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
-      - "7000:7000"  # Correct Django port
+      - "7000:7000"
     env_file:
       - .env
-    volumes:
-      - .:/app
     deploy:
       replicas: 1
       restart_policy:
@@ -24,6 +22,3 @@ services:
         parallelism: 1
         delay: 10s
         order: start-first
-
-volumes:
-  postgres_data:
