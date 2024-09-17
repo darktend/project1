@@ -6,9 +6,30 @@ on:
       - master
 
 jobs:
-  check_root_changes:
+  # check_root_changes:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     root_files_changed: ${{ steps.filter.outputs.root_files_changed }}
+    
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: Check if root files have changed
+  #       id: filter
+  #       uses: dorny/paths-filter@v2
+  #       with:
+  #         filters: |
+  #           root_files_changed:
+  #             - '.gitignore'
+  #             - 'docker-compose.yml'
+  #             - '*'
+
+  check_folder_changes:
     runs-on: ubuntu-latest
     outputs:
+      backend_rds_changed: ${{ steps.filter.outputs.backend_rds_changed }}
+      backend_redis_changed: ${{ steps.filter.outputs.backend_redis_changed }}
       root_files_changed: ${{ steps.filter.outputs.root_files_changed }}
     
     steps:
@@ -24,16 +45,6 @@ jobs:
               - '.gitignore'
               - 'docker-compose.yml'
               - '*'
-
-  check_folder_changes:
-    runs-on: ubuntu-latest
-    outputs:
-      backend_rds_changed: ${{ steps.filter.outputs.backend_rds_changed }}
-      backend_redis_changed: ${{ steps.filter.outputs.backend_redis_changed }}
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
       - name: Check if folder files have changed
         id: filter
