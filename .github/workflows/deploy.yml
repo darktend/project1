@@ -4,14 +4,15 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'backend_rds/**'
+      - 'backend_redis/**'
+      - 'docker-compose.yml'
 
 jobs:
   build_rds:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-    paths:
-      - 'backend_rds/**'
-      - 'docker-compose.yml'
+    if: "contains(github.event.head_commit.modified, 'backend_rds/') || contains(github.event.head_commit.modified, 'docker-compose.yml')"
     
     steps:
       - name: Checkout code
@@ -64,10 +65,7 @@ jobs:
 
   build_redis:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' }}
-    paths:
-      - 'backend_redis/**'
-      - 'docker-compose.yml'
+    if: "contains(github.event.head_commit.modified, 'backend_redis/') || contains(github.event.head_commit.modified, 'docker-compose.yml')"
     
     steps:
       - name: Checkout code
