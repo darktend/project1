@@ -1,3 +1,4 @@
+
 services:
   backend_rds:
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_RDS}:${IMAGE_TAG}"
