@@ -78,21 +78,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST }} << EOF
             cd /home/ec2-user/project1
             git pull origin master
-            
-            
-            # AWS Docker login для доступу до образів
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-            
-           
-            # Отримання останнього доступного тега для RDS
-            LATEST_RDS_TAG=$(aws ecr describe-images --repository-name rds --region ${{ secrets.AWS_REGION }} --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
-            
-            # Отримання останнього доступного тега для Redis
-            LATEST_REDIS_TAG=$(aws ecr describe-images --repository-name redis --region ${{ secrets.AWS_REGION }} --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
-
-            # Перезапуск контейнерів для застосування змін
-            docker-compose down
-            docker-compose up -d
           EOF
           rm /tmp/ssh_key
 
