@@ -2,7 +2,7 @@ services:
   backend_rds:
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
-      - "7000:7000"
+      - "5432:5432"
     env_file:
       - .env
     deploy:
