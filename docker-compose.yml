@@ -1,7 +1,7 @@
 
 services:
   backend_rds:
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_RDS}:${IMAGE_TAG}"
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
       - "5432:5432"
     env_file:
@@ -16,7 +16,7 @@ services:
         order: start-first
 
   backend_redis:
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_REDIS}:${IMAGE_TAG}"
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
     ports:
       - "6379:6379"
     env_file:
