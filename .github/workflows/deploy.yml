@@ -4,15 +4,35 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'backend_rds/**'
-      - 'backend_redis/**'
-      - 'docker-compose.yml'
 
 jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend_rds_changed: ${{ steps.filter.outputs.backend_rds_changed }}
+      backend_redis_changed: ${{ steps.filter.outputs.backend_redis_changed }}
+      docker_compose_changed: ${{ steps.filter.outputs.docker_compose_changed }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check if specific paths have changed
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            backend_rds_changed:
+              - 'backend_rds/**'
+            backend_redis_changed:
+              - 'backend_redis/**'
+            docker_compose_changed:
+              - 'docker-compose.yml'
+
   build_rds:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.modified, 'backend_rds/') || contains(github.event.head_commit.modified, 'docker-compose.yml')"
+    needs: check_changes
+    if: needs.check_changes.outputs.backend_rds_changed == 'true' || needs.check_changes.outputs.docker_compose_changed == 'true'
     
     steps:
       - name: Checkout code
@@ -65,7 +85,8 @@ jobs:
 
   build_redis:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.modified, 'backend_redis/') || contains(github.event.head_commit.modified, 'docker-compose.yml')"
+    needs: check_changes
+    if: needs.check_changes.outputs.backend_redis_changed == 'true' || needs.check_changes.outputs.docker_compose_changed == 'true'
     
     steps:
       - name: Checkout code
