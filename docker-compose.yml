@@ -1,9 +1,5 @@
 services:
   backend_redis:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev # Якщо потрібно
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
     ports:
       - "8000:8000"
@@ -13,10 +9,6 @@ services:
       - .:/app
 
   backend_rds:
-    build:
-      context: .  # Build context set to current directory
-      dockerfile: Dockerfile
-      target: dev
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
       - "7000:7000"  # Correct Django port
