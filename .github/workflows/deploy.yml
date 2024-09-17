@@ -79,22 +79,16 @@ jobs:
             cd /home/ec2-user/project1
             git pull origin master
             
+            
+            # AWS Docker login для доступу до образів
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+            
+           
             # Отримання останнього доступного тега для RDS
             LATEST_RDS_TAG=$(aws ecr describe-images --repository-name rds --region ${{ secrets.AWS_REGION }} --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
             
             # Отримання останнього доступного тега для Redis
             LATEST_REDIS_TAG=$(aws ecr describe-images --repository-name redis --region ${{ secrets.AWS_REGION }} --query 'sort_by(imageDetails,&imagePushedAt)[-1].imageTags[0]' --output text)
-            
-            # AWS Docker login для доступу до образів
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-            
-            # Завантаження останніх образів з динамічними тегами
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$LATEST_RDS_TAG
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$LATEST_REDIS_TAG
-
-            # Оновлення docker-compose.yml для використання нових образів
-            sed -i "s|image:.*rds:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$LATEST_RDS_TAG|g" docker-compose.yml
-            sed -i "s|image:.*redis:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$LATEST_REDIS_TAG|g" docker-compose.yml
 
             # Перезапуск контейнерів для застосування змін
             docker-compose down
