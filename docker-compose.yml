@@ -6,7 +6,7 @@ services:
       target: dev # Якщо потрібно
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis:${IMAGE_TAG}"
     ports:
-      - "6379:6379"
+      - "8000:8000"
     env_file:
       - .env
     volumes:
@@ -19,7 +19,7 @@ services:
       target: dev
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/rds:${IMAGE_TAG}"
     ports:
-      - "5432:5432"  # Correct Django port
+      - "7000:7000"  # Correct Django port
     env_file:
       - .env
     volumes:
