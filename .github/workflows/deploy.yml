@@ -6,38 +6,19 @@ on:
       - master
 
 jobs:
-  # check_root_changes:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     root_files_changed: ${{ steps.filter.outputs.root_files_changed }}
-    
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
-
-  #     - name: Check if root files have changed
-  #       id: filter
-  #       uses: dorny/paths-filter@v2
-  #       with:
-  #         filters: |
-  #           root_files_changed:
-  #             - '.gitignore'
-  #             - 'docker-compose.yml'
-  #             - '*'
-
   check_folder_changes:
     runs-on: ubuntu-latest
     outputs:
-      backend_rds_changed: ${{ steps.filter.outputs.backend_rds_changed }}
-      backend_redis_changed: ${{ steps.filter.outputs.backend_redis_changed }}
-      root_files_changed: ${{ steps.filter.outputs.root_files_changed }}
+      backend_rds_changed: ${{ steps.check_rds.outputs.backend_rds_changed }}
+      backend_redis_changed: ${{ steps.check_redis.outputs.backend_redis_changed }}
+      root_files_changed: ${{ steps.check_root.outputs.root_files_changed }}
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Check if root files have changed
-        id: filter
+        id: check_root
         uses: dorny/paths-filter@v2
         with:
           filters: |
@@ -46,20 +27,26 @@ jobs:
               - 'docker-compose.yml'
               - '*'
 
-      - name: Check if folder files have changed
-        id: filter
+      - name: Check if backend_rds files have changed
+        id: check_rds
         uses: dorny/paths-filter@v2
         with:
           filters: |
             backend_rds_changed:
               - 'backend_rds/**'
+
+      - name: Check if backend_redis files have changed
+        id: check_redis
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
             backend_redis_changed:
               - 'backend_redis/**'
 
   deploy_root:
     runs-on: ubuntu-latest
-    needs: check_root_changes
-    if: needs.check_root_changes.outputs.root_files_changed == 'true'
+    needs: check_folder_changes
+    if: needs.check_folder_changes.outputs.root_files_changed == 'true'
     
     steps:
       - name: Checkout code
@@ -190,8 +177,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST }} << EOF
             cd /home/ec2-user/project1
             git pull origin master
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
             sed -i '/backend_redis:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG|g' docker-compose.yml
             docker-compose down
             docker-compose up -d
