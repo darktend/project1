@@ -77,10 +77,6 @@ jobs:
           chmod 600 /tmp/ssh_key
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST }} << EOF
             cd /home/ec2-user/project1
-            # Відхилення локальних змін
-            git reset --hard HEAD
-
-            # Витягнення останніх змін з репозиторію
             git pull origin master
             docker-compose down
             docker-compose up -d
