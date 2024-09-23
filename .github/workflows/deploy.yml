@@ -143,7 +143,7 @@ jobs:
 
   deploy_frontend_to_s3_master:
     runs-on: ubuntu-latest
-    if: needs.check_folder_changes.outputs.frontend_changed == 'true' && github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
