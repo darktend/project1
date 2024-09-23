@@ -141,9 +141,10 @@ jobs:
           EOF
           rm /tmp/ssh_key
 
-  deploy_frontend_to_s3_master:
+  deploy_frontend_to_s3_dev:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    needs: check_folder_changes
+    if: needs.check_folder_changes.outputs.frontend_changed == 'true' && github.ref == 'refs/heads/dev'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -163,6 +164,9 @@ jobs:
             frontend_changed:
               - 'frontend/**'
 
+      - name: Debug frontend changes
+        run: echo "Frontend changed: ${{ steps.check_frontend.outputs.frontend_changed }}"
+
       - name: Remove old files from S3
         if: steps.check_frontend.outputs.frontend_changed == 'true'
         run: |
@@ -172,6 +176,7 @@ jobs:
         if: steps.check_frontend.outputs.frontend_changed == 'true'
         run: |
           aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET_NAME_PROD }} --delete
+
 
   build_and_deploy_rds_dev:
     runs-on: ubuntu-latest
