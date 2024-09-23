@@ -1,4 +1,0 @@
-{
-  "BACKEND_RDS_URL": "http://prod-lb-rds-280393287.us-east-2.elb.amazonaws.com/test_connection/",
-  "BACKEND_REDIS_URL": "http://prod-lb-redis-1639169797.us-east-2.elb.amazonaws.com/test_connection/"
-}
