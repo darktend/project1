@@ -19,10 +19,10 @@ RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
 # Copy the rest of the application code into the container
+
 COPY . /app/
 
 # Expose the port that Django will run on
-
 EXPOSE 6379
 
 # Run the application

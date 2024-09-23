@@ -172,9 +172,7 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
-          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.DEV_EC2_HOST }} << EOF
-            cd /home/ec2-user/project1
-            git pull origin dev
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_DEV }} << EOF
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG
             sed -i '/backend_rds:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/rds:$IMAGE_TAG|g' docker-compose.yml
@@ -223,7 +221,7 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
-          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.DEV_EC2_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_DEV }} << EOF
             cd /home/ec2-user/project1
             git pull origin dev
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis:$IMAGE_TAG
