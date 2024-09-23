@@ -163,9 +163,6 @@ jobs:
           frontend_changed:
             - 'frontend/**'
 
-    - name: Debug frontend changes
-      run: echo "Frontend changed: ${{ steps.check_frontend.outputs.frontend_changed }}"
-
     - name: Remove old files from S3
       if: steps.check_frontend.outputs.frontend_changed == 'true'
       run: |
