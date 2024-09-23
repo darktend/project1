@@ -170,7 +170,7 @@ jobs:
       - name: Upload new frontend files to S3
         if: steps.check_frontend.outputs.frontend_changed == 'true'
         run: |
-          aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET_NAME_PROD }} --acl public-read --delete
+          aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET_NAME_PROD }} --delete
 
 
   build_and_deploy_rds_dev:
