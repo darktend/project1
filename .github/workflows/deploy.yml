@@ -289,20 +289,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION_S3 }}
 
-      - name: Check if frontend files have changed
-        id: check_frontend
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            frontend_changed:
-              - 'frontend/**'
-
-      - name: Remove old files from S3
-        if: steps.check_frontend.outputs.frontend_changed == 'true'
+      - name: Remove all files from S3
         run: |
+          echo "Removing all files from S3 bucket: ${{ secrets.S3_BUCKET_NAME_DEV }}"
           aws s3 rm s3://${{ secrets.S3_BUCKET_NAME_DEV }} --recursive
 
       - name: Upload new frontend files to S3
-        if: steps.check_frontend.outputs.frontend_changed == 'true'
         run: |
+          echo "Uploading new files from ./frontend to S3 bucket: ${{ secrets.S3_BUCKET_NAME_DEV }}"
           aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET_NAME_DEV }} --delete
+
