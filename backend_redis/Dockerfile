@@ -23,7 +23,7 @@ RUN pip install --upgrade pip \
 COPY . /app/
 
 # Expose the port that Django will run on
-EXPOSE 6379
+EXPOSE 8001
 
 # Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:6379"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
