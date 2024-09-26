@@ -40,7 +40,10 @@ jobs:
         with:
           filters: |
             frontend_changed:
-              - 'frontend/**'
+              - 'frontend/**/*.js'
+              - 'frontend/**/*.css'
+              - 'frontend/**/*.html'
+              - 'frontend/**/*.json'
 
   build_and_deploy_rds_master:
     runs-on: ubuntu-latest
