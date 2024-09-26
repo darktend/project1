@@ -1,4 +1,4 @@
 {
-  "BACKEND_RDS_URL": "http://dev-lb-rds-1337977187.us-east-2.elb.amazonaws.com/test_connection/",
-  "BACKEND_REDIS_URL": "http://dev-lb-redis-302959486.us-east-2.elb.amazonaws.com/test_connection/"
+  "BACKEND_RDS_URL": "http://dev-lb-rds-1586362114.us-east-2.elb.amazonaws.com/test_connection/",
+  "BACKEND_REDIS_URL": "http://dev-lb-redis-1959345195.us-east-2.elb.amazonaws.com/test_connection/"
 }

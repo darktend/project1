@@ -165,7 +165,7 @@ jobs:
               - 'frontend/**'
 
       - name: Remove old files from S3
-        # if: steps.check_frontend.outputs.frontend_changed == 'true'
+        if: steps.check_frontend.outputs.frontend_changed == 'true'
         run: |
           aws s3 rm s3://${{ secrets.S3_BUCKET_NAME_PROD }} --recursive
 
