@@ -275,9 +275,10 @@ jobs:
           rm /tmp/ssh_key
   
   deploy_frontend_to_s3_dev:
-    runs-on: ubuntu-latest
+    uns-on: ubuntu-latest
     needs: check_folder_changes
     if: needs.check_folder_changes.outputs.frontend_changed == 'true' && github.ref == 'refs/heads/dev'
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
