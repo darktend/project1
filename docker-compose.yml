@@ -31,3 +31,7 @@ services:
     #     parallelism: 1
     #     delay: 10s
     #     order: start-first
+
+  networks:
+  default:
+    name: ec2-user_default
