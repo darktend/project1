@@ -24,7 +24,6 @@ COPY . /app/
 
 
 # Expose the port that Django will run on
-
 EXPOSE 8002
 
 # Run the application
