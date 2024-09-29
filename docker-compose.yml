@@ -9,10 +9,10 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    #   update_config:
-    #     parallelism: 1
-    #     delay: 10s
-    #     order: start-first
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
 
   backend_redis:
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/redis_prod:${IMAGE_TAG}"
@@ -26,7 +26,7 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    #   update_config:
-    #     parallelism: 1
-    #     delay: 10s
-    #     order: start-first
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
