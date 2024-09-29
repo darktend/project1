@@ -27,6 +27,5 @@ COPY . /app/
 
 EXPOSE 8002
 
-
 # Run the application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8002"]
