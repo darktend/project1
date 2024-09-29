@@ -132,11 +132,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY_PROD }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_PROD }} << EOF
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis_prod:$IMAGE_TAG
+            docker network ls | grep ec2-user_default || docker network create ec2-user_default
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis_prod:$IMAGE_TAG
             sed -i '/backend_redis:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis_prod:$IMAGE_TAG|g' docker-compose.yml
-            docker-compose down
-            docker-compose up -d
+            docker-compose down --remove-orphans
+            docker-compose up --force-recreate -d
           EOF
           rm /tmp/ssh_key
 
