@@ -149,8 +149,8 @@ jobs:
         run: |
           IMAGE_TAG=${{ github.sha }}
           docker build -t ${{ secrets.AWS_ECR_REDIS }}:$IMAGE_TAG ./backend_redis
-          docker tag ${{ secrets.AWS_ECR_REDIS }}:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REDIS }}:$IMAGE_TAG
-          docker push ${{ secrets.AWS_ECR_REDIS }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REDIS }}:$IMAGE_TAG
+          docker tag ${{ secrets.AWS_ECR_REDIS }}:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_redis:$IMAGE_TAG
+          docker push ${{ secrets.AWS_ECR_REDIS }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev-redis:$IMAGE_TAG
 
       - name: Deploy backend_redis to EC2 (Master)
         env:
@@ -166,8 +166,8 @@ jobs:
           chmod 600 /tmp/ssh_key
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_PROD }} << EOF
             aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-            docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REDIS:$IMAGE_TAG
-            sed -i '/backend_redis:/,/image:/s|image: .*|image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REDIS:$IMAGE_TAG|g' docker-compose.yml
+            docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/dev_redis:$IMAGE_TAG
+            sed -i '/backend_redis:/,/image:/s|image: .*|image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/dev_redis:$IMAGE_TAG|g' docker-compose.yml
             if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
             echo "Контейнер $CONTAINER_NAME працює. Зупиняємо..."
             
