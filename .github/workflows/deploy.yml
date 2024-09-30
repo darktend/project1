@@ -79,6 +79,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           IMAGE_TAG: ${{ github.sha }}
+          CONTAINER_NAME: backend_rds
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY_PROD }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
@@ -87,11 +88,17 @@ jobs:
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/prod_rds:$IMAGE_TAG
             sed -i '/backend_rds:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/prod_rds:$IMAGE_TAG|g' docker-compose.yml
-             if [ "\$(docker ps -q -f name=backend_rds)" ]; then
-              echo "Контейнер backend_rds працює. Зупиняємо..."
-              docker-compose  stop backend_redis
-              echo "Контейнер backend_redsi не запущений."
-              docker-compose start backend_redis
+             if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+            echo "Контейнер $CONTAINER_NAME працює. Зупиняємо..."
+            
+            # Зупиняємо контейнер
+            docker-compose stop $CONTAINER_NAME || echo "Не вдалося зупинити контейнер $CONTAINER_NAME"
+            
+            else
+                echo "Контейнер $CONTAINER_NAME не запущений. Запускаємо..."
+                
+                # Запускаємо контейнер
+                docker-compose up -d $CONTAINER_NAME || echo "Не вдалося запустити контейнер $CONTAINER_NAME"
             fi
           EOF
           rm /tmp/ssh_key
