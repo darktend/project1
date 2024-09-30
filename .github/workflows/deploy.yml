@@ -14,6 +14,7 @@ jobs:
       backend_redis_changed: ${{ steps.check_redis.outputs.backend_redis_changed }}
       frontend_changed: ${{ steps.check_frontend.outputs.frontend_changed }}
     
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
