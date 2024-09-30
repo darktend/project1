@@ -92,6 +92,7 @@ jobs:
               docker-compose down 
             else
               echo "Контейнер backend_rds не запущений."
+              docker-compose up -d
             fi
             docker-compose up -d
           EOF
