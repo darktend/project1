@@ -163,6 +163,7 @@ jobs:
             fi
           EOF
           rm /tmp/ssh_key
+
   deploy_frontend_to_s3_dev:
     runs-on: ubuntu-latest
     needs: check_folder_changes
@@ -180,8 +181,8 @@ jobs:
 
       - name: Remove old files from S3
         run: |
-          aws s3 rm s3://${{ secrets.S3_BUCKET_NAME_DEV }} --recursive
+          aws s3 rm s3://${{ secrets.S3_BUCKET_NAME_PROD }} --recursive
 
       - name: Upload new frontend files to S3
         run: |
-          aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET_NAME_DEV }} --delete
+          aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET_NAME_PROD }} --delete
