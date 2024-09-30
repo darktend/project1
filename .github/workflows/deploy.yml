@@ -151,7 +151,7 @@ jobs:
               echo "Контейнер backend_redis працює. Зупиняємо..."
               docker-compose stop backend_redis
             else
-              echo "Контейнер backend_redis не запущений."
+              docker-compose start backend_redis
             fi
             
             # Update Docker Compose environment before launching
