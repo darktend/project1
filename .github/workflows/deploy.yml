@@ -41,6 +41,13 @@ jobs:
           filters: |
             frontend_changed:
               - 'frontend/**'
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}-v2
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
 
   build_and_deploy_rds_master:
     runs-on: ubuntu-latest
