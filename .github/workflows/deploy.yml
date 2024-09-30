@@ -149,9 +149,9 @@ jobs:
             
             if [ "\$(docker ps -q -f name=backend_redis)" ]; then
               echo "Контейнер backend_redis працює. Зупиняємо..."
-              docker-compose stop backend_redis
-            else
               docker-compose start backend_redis
+            else
+              docker-compose stop backend_redis
             fi
             
             # Update Docker Compose environment before launching
