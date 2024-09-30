@@ -143,7 +143,7 @@ jobs:
             docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/redis_prod:$IMAGE_TAG
             sed -i '/backend_redis:/,/image:/s|image: .*|image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/redis_prod:$IMAGE_TAG|g' docker-compose.yml
             
-           if [ "\$(docker ps -q -f name=backend_rds)" ]; then
+           if [ "\$(docker ps -q -f name=backend_redis)" ]; then
               echo "Контейнер backend_rds працює. Зупиняємо..."
               docker-compose  stop backend_redis
               echo "Контейнер backend_redsi не запущений."
