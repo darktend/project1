@@ -141,25 +141,23 @@ jobs:
           chmod 600 /tmp/ssh_key
           ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_PROD }} << EOF
             aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-            # AWS_REGION=${{ secrets.AWS_REGION }}
-            # AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
-            # IMAGE_TAG=${{ github.sha }}
             docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/redis_prod:$IMAGE_TAG
             sed -i '/backend_redis:/,/image:/s|image: .*|image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/redis_prod:$IMAGE_TAG|g' docker-compose.yml
             
             if [ "\$(docker ps -q -f name=backend_redis)" ]; then
-              echo "Контейнер backend_redis працює. Зупиняємо..."
+              echo "Контейнер backend_redis працює..."
               docker-compose start backend_redis
             else
+            echo "Контейнер backend_redis не запущений."
               docker-compose stop backend_redis
             fi
             
             # Update Docker Compose environment before launching
-            export AWS_REGION=$AWS_REGION
-            export AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
-            export IMAGE_TAG=$IMAGE_TAG
+            # export AWS_REGION=$AWS_REGION
+            # export AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
+            # export IMAGE_TAG=$IMAGE_TAG
             
-            docker-compose start backend_redis
+            # docker-compose start backend_redis
           EOF
           rm /tmp/ssh_key
 
