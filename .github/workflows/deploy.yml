@@ -136,7 +136,11 @@ jobs:
           IMAGE_TAG=${{ github.sha }}
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             sed -i '/backend_redis:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/redis_prod:$IMAGE_TAG|g' docker-compose.yml
-            docker-compose down
+            if [ "\$(docker ps -q -f name=backend_redis)" ]; then
+              docker-compose down
+            else
+              echo "Контейнер backend_redis не запущений, нічого не робимо."
+            fi
             docker-compose up -d
           EOF
           rm /tmp/ssh_key
