@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - dev
+      - test
 
 jobs:
   check_folder_changes:
