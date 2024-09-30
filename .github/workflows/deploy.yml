@@ -87,13 +87,13 @@ jobs:
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/prod_rds:$IMAGE_TAG
             sed -i '/backend_rds:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/prod_rds:$IMAGE_TAG|g' docker-compose.yml
-            if [ "\$(docker ps -q -f name=backend_rds)" ]; then
-              echo "Контейнер backend_rds працює. Зупиняємо..."
-              docker-compose down 
-            else
-              echo "Контейнер backend_rds не запущений."
-            fi
-            docker-compose up -d
+            # if [ "\$(docker ps -q -f name=backend_rds)" ]; then
+            #   echo "Контейнер backend_rds працює. Зупиняємо..."
+            #   docker-compose down 
+            # else
+            #   echo "Контейнер backend_rds не запущений."
+            # fi
+            # docker-compose up -d
           EOF
           rm /tmp/ssh_key
 
