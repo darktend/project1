@@ -58,7 +58,7 @@ jobs:
           echo "frontend_changed: ${{ needs.check_folder_changes.outputs.frontend_changed }}"
 
 
-  build_and_deploy_rds_master:
+  build_and_deploy_rds_dev:
     runs-on: ubuntu-latest
     needs: check_folder_changes
     if: needs.check_folder_changes.outputs.backend_rds_changed == 'true' && github.ref == 'refs/heads/dev'
@@ -120,7 +120,7 @@ jobs:
           EOF
           rm /tmp/ssh_key
 
-  build_and_deploy_redis_master:
+  build_and_deploy_redis_dev:
     runs-on: ubuntu-latest
     needs: check_folder_changes
     if: needs.check_folder_changes.outputs.backend_redis_changed == 'true' && github.ref == 'refs/heads/dev'
