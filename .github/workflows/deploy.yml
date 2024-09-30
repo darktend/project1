@@ -45,7 +45,8 @@ jobs:
   build_and_deploy_rds_dev:
     runs-on: ubuntu-latest
     needs: check_folder_changes
-    if: needs.check_folder_changes.outputs.backend_rds_changed == 'true' && needs.check_folder_changes.outputs.frontend_changed == 'false' && github.ref == 'refs/heads/dev'
+    if: needs.check_folder_changes.outputs.backend_rds_changed == 'true' && github.ref == 'refs/heads/master'
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -53,7 +54,7 @@ jobs:
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
 
       - name: Configure AWS credentials
@@ -66,36 +67,47 @@ jobs:
       - name: Log in to Amazon ECR
         run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
-      - name: Build and push Docker image for backend_rds (Dev)
+      - name: Build and push Docker image for backend_rds
         run: |
           IMAGE_TAG=${{ github.sha }}
-          docker build -t ${{ secrets.AWS_ECR_RDS }}:$IMAGE_TAG ./backend_rds
-          docker tag ${{ secrets.AWS_ECR_RDS }}:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_rds:$IMAGE_TAG
+          docker build -t dev_rds:$IMAGE_TAG ./backend_rds
+          docker tag dev_rds:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_rds:$IMAGE_TAG
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_rds:$IMAGE_TAG
 
-      - name: Deploy backend_rds to EC2 (Dev)
+      - name: Deploy backend_rds to EC2 (Master)
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           IMAGE_TAG: ${{ github.sha }}
+          CONTAINER_NAME: backend_rds
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
+          echo "${{ secrets.SSH_PRIVATE_KEY_PROD }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
-          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_DEV }} << EOF
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_PROD }} << EOF
+          IMAGE_TAG=${{ github.sha }}
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_rds:$IMAGE_TAG
             sed -i '/backend_rds:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_rds:$IMAGE_TAG|g' docker-compose.yml
-            if [ "$(docker ps -q -f name=backend_rds)" ]; then
-              docker-compose stop backend_rds
+             if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+            echo "Контейнер $CONTAINER_NAME працює. Зупиняємо..."
+            
+            # Зупиняємо контейнер
+            docker-compose stop $CONTAINER_NAME || echo "Не вдалося зупинити контейнер $CONTAINER_NAME"
+            
+            else
+                echo "Контейнер $CONTAINER_NAME не запущений. Запускаємо..."
+                
+                # Запускаємо контейнер
+                docker-compose up -d $CONTAINER_NAME || echo "Не вдалося запустити контейнер $CONTAINER_NAME"
             fi
-            docker-compose up -d backend_rds
           EOF
           rm /tmp/ssh_key
 
   build_and_deploy_redis_dev:
     runs-on: ubuntu-latest
     needs: check_folder_changes
-    if: needs.check_folder_changes.outputs.backend_redis_changed == 'true' && needs.check_folder_changes.outputs.frontend_changed == 'false' && github.ref == 'refs/heads/dev'
+    if: needs.check_folder_changes.outputs.backend_rds_changed == 'true' && github.ref == 'refs/heads/master'
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -103,7 +115,7 @@ jobs:
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY_PROD }}
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
 
       - name: Configure AWS credentials
@@ -116,33 +128,42 @@ jobs:
       - name: Log in to Amazon ECR
         run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
 
-      - name: Build and push Docker image for backend_redis (Dev)
+      - name: Build and push Docker image for backend_rds
         run: |
           IMAGE_TAG=${{ github.sha }}
-          docker build -t ${{ secrets.AWS_ECR_REDIS }}:$IMAGE_TAG ./backend_redis
-          docker tag ${{ secrets.AWS_ECR_REDIS }}:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_redis:$IMAGE_TAG
+          docker build -t dev_rds:$IMAGE_TAG ./backend_rds
+          docker tag dev_redis:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_redis:$IMAGE_TAG
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_redis:$IMAGE_TAG
 
-      - name: Deploy backend_redis to EC2 (Dev)
+      - name: Deploy backend_rds to EC2 (Master)
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           IMAGE_TAG: ${{ github.sha }}
+          CONTAINER_NAME: backend_rds
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ssh_key
+          echo "${{ secrets.SSH_PRIVATE_KEY_PROD }}" > /tmp/ssh_key
           chmod 600 /tmp/ssh_key
-          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_DEV }} << EOF
+          ssh -o StrictHostKeyChecking=no -i /tmp/ssh_key ec2-user@${{ secrets.EC2_HOST_PROD }} << EOF
+          IMAGE_TAG=${{ github.sha }}
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_redis:$IMAGE_TAG
-            sed -i '/backend_redis:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_redis:$IMAGE_TAG|g' docker-compose.yml
-            if [ "$(docker ps -q -f name=backend_redis)" ]; then
-              docker-compose stop backend_redis
+            sed -i '/backend_rds:/,/image:/s|image: .*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/dev_redis:$IMAGE_TAG|g' docker-compose.yml
+             if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+            echo "Контейнер $CONTAINER_NAME працює. Зупиняємо..."
+            
+            # Зупиняємо контейнер
+            docker-compose stop $CONTAINER_NAME || echo "Не вдалося зупинити контейнер $CONTAINER_NAME"
+            
+            else
+                echo "Контейнер $CONTAINER_NAME не запущений. Запускаємо..."
+                
+                # Запускаємо контейнер
+                docker-compose up -d $CONTAINER_NAME || echo "Не вдалося запустити контейнер $CONTAINER_NAME"
             fi
-            docker-compose up -d backend_redis
           EOF
           rm /tmp/ssh_key
-
-  deploy_frontend_to_s3_master:
+  deploy_frontend_to_s3_dev:
     runs-on: ubuntu-latest
     needs: check_folder_changes
     if: needs.check_folder_changes.outputs.frontend_changed == 'true' && github.ref == 'refs/heads/dev'
