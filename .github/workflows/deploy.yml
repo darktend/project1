@@ -20,27 +20,21 @@ jobs:
 
       - name: Check if backend_rds files have changed
         id: check_rds
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            backend_rds_changed:
-              - 'backend_rds/**'
+        run: |
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^backend_rds/' && echo "backend_rds_changed=true" || echo "backend_rds_changed=false"
+          echo "::set-output name=backend_rds_changed::$(cat backend_rds_changed)"
 
       - name: Check if backend_redis files have changed
         id: check_redis
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            backend_redis_changed:
-              - 'backend_redis/**'
+        run: |
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^backend_redis/' && echo "backend_redis_changed=true" || echo "backend_redis_changed=false"
+          echo "::set-output name=backend_redis_changed::$(cat backend_redis_changed)"
 
       - name: Check if frontend files have changed
         id: check_frontend
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            frontend_changed:
-              - 'frontend/**'
+        run: |
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^frontend/' && echo "frontend_changed=true" || echo "frontend_changed=false"
+          echo "::set-output name=frontend_changed::$(cat frontend_changed)"
 
   output_debugging:
     runs-on: ubuntu-latest
