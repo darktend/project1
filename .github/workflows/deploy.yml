@@ -175,13 +175,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION_S3 }}
 
-      - name: Check if frontend files have changed
-        id: check_frontend
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            frontend_changed:
-              - 'frontend/**'
+      # - name: Check if frontend files have changed
+      #   id: check_frontend
+      #   uses: dorny/paths-filter@v2
+      #   with:
+      #     filters: |
+      #       frontend_changed:
+      #         - 'frontend/**'
 
       - name: Remove old files from S3
         if: steps.check_frontend.outputs.frontend_changed == 'true'
