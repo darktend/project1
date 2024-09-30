@@ -22,7 +22,7 @@ RUN pip install --upgrade pip \
 
 COPY . /app/
 
-# Expose the port that Django will run on
+# Expose the port that Django will run on...!
 EXPOSE 8001
 
 # Run the application
