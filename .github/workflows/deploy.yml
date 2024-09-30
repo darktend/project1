@@ -94,6 +94,8 @@ jobs:
             #   echo "Контейнер backend_rds не запущений."
             # fi
             # docker-compose up -d
+            docker-compose down
+            docker-compose up -d
           EOF
           rm /tmp/ssh_key
 
@@ -158,6 +160,8 @@ jobs:
             # export IMAGE_TAG=$IMAGE_TAG
             
             # docker-compose start backend_redis
+            docker-compose down
+            docker-compose up -d
           EOF
           rm /tmp/ssh_key
 
