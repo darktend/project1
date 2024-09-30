@@ -325,35 +325,35 @@ jobs:
           rm /tmp/ssh_key
   
     deploy_frontend_to_s3_master:
-    runs-on: ubuntu-latest
-    needs: check_folder_changes
-    if: needs.check_folder_changes.outputs.frontend_changed == 'true' && github.ref == 'refs/heads/master'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      runs-on: ubuntu-latest
+      needs: check_folder_changes
+      if: needs.check_folder_changes.outputs.frontend_changed == 'true' && github.ref == 'refs/heads/master'
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION_S3 }}
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_REGION_S3 }}
 
-      - name: Check if frontend files have changed
-        id: check_frontend
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            frontend_changed:
-              - 'frontend/**'
+        - name: Check if frontend files have changed
+          id: check_frontend
+          uses: dorny/paths-filter@v2
+          with:
+            filters: |
+              frontend_changed:
+                - 'frontend/**'
 
-      - name: Remove old files from S3
-        if: steps.check_frontend.outputs.frontend_changed == 'true'
-        run: |
-          aws s3 rm s3://${{ secrets.S3_BUCKET_NAME_DEV }} --recursive
+        - name: Remove old files from S3
+          if: steps.check_frontend.outputs.frontend_changed == 'true'
+          run: |
+            aws s3 rm s3://${{ secrets.S3_BUCKET_NAME_DEV }} --recursive
 
-      - name: Upload new frontend files to S3
-        if: steps.check_frontend.outputs.frontend_changed == 'true'
-        run: |
-          aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET_NAME_DEV }} --delete
+        - name: Upload new frontend files to S3
+          if: steps.check_frontend.outputs.frontend_changed == 'true'
+          run: |
+            aws s3 sync ./frontend s3://${{ secrets.S3_BUCKET_NAME_DEV }} --delete
 
